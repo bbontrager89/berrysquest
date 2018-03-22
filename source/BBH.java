@@ -15,8 +15,10 @@ import java.io.IOException;
 public class BBH extends PApplet {
 
 PFont font;
-PImage img, img2;
+
 VCamera cam = new VCamera();
+VTileset tileset;
+VRoom room;
 
 public void setup() {
   
@@ -25,8 +27,44 @@ public void setup() {
   noStroke();
   fill(255);
   font = loadFont("Consolas-12.vlw");
-  img = loadImage("metalplate.png");
-  img2 = loadImage("metalgrate.png");
+  tileset = new VTileset(new PImage[] {
+    loadImage("metalwall.png"), // 0.0
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"), // 1.0
+    loadImage("metalplatenw.png"),
+    loadImage("metalplaten.png"),
+    loadImage("metalplatene.png"),
+    loadImage("metalplatew.png"),
+    loadImage("metalplatec.png"),
+    loadImage("metalplatee.png"),
+    loadImage("metalplatesw.png"),
+    loadImage("metalplates.png"),
+    loadImage("metalplatese.png"),
+    loadImage("metalgrate.png") // 2.0
+  });
+  room = new VRoom(new float[][] {
+  {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+  {0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f},
+  {0.0f, 1.0f, 2.0f, 1.1f, 1.2f, 1.2f, 1.3f, 2.0f, 1.0f, 0.0f},
+  {0.0f, 1.0f, 1.0f, 1.4f, 1.5f, 1.5f, 1.6f, 1.0f, 1.0f, 0.0f},
+  {0.0f, 1.0f, 1.0f, 1.4f, 0.0f, 0.0f, 1.6f, 1.0f, 1.0f, 0.0f},
+  {0.0f, 1.0f, 1.0f, 1.4f, 0.0f, 0.0f, 1.6f, 1.0f, 1.0f, 0.0f},
+  {0.0f, 1.0f, 1.0f, 1.4f, 1.5f, 1.5f, 1.6f, 1.0f, 1.0f, 0.0f},
+  {0.0f, 1.0f, 2.0f, 1.7f, 1.8f, 1.8f, 1.9f, 2.0f, 1.0f, 0.0f},
+  {0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f},
+  {0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+  {0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f}
+}, new int[][] {{1, 1, 5}, {1, 7, 5}, {8, 1, 5}, {8, 7, 5}}, createGraphics(10 * 64, 11 * 64 + 64));
+  cam.pos.x = (room.tiles.length * 64) / 2.0f;
+  cam.pos.y = (room.tiles.length * 64) / -2.0f;
 }
 
 int x = 200;
@@ -46,13 +84,7 @@ public void draw() {
     cam.scale *= 1.05f;
   background(0);
   cam.shift();
-  for(int i = 0; i < x; i++) {
-    for(int j = 0; j < x; j++) {
-      image(img, i * 64, j * 64);
-      if(i == 5 && j == 7)
-        image(img2, i * 64, j * 64);
-    }
-  }
+  room.display();
   cam.unshift();
   fill(255);
   textFont(font);
@@ -144,8 +176,75 @@ class VCamera {
   }
 }
 class VRoom {
-  // vroom vroom -vm
+  float[][] tiles;
+  int[][] lights;
+  PGraphics lightmap;
   
+  VRoom(float[][] tiles, int[][] lights, PGraphics lightmap) {
+    this.tiles = tiles;
+    this.lights = lights;
+    this.lightmap = lightmap;
+    this.lightmap.beginDraw();
+    for(int y = 0; y < this.tiles.length; y++) {
+      for(int x = 0; x < this.tiles[y].length; x++) {
+        float bright = 0.0f;
+        for(int l = 0; l < this.lights.length; l++) {
+          bright += this.lights[l][2] / (1 + Math.pow(dist(x, y, this.lights[l][0], this.lights[l][1]), 2));
+        }
+        if(bright > 1.0f) {
+          bright = 1.0f;
+        }
+        this.lightmap.noStroke();
+        this.lightmap.fill(0, 0, 0, (1.0f - bright) * 255);
+        if(tileset.isWall(this.tiles[y][x])) {
+          this.lightmap.rect(x * 64, y * 64, 64, 128);
+        } else {
+          this.lightmap.rect(x * 64, (y + 1) * 64, 64, 64);
+        }
+      }
+    }
+    this.lightmap.endDraw();
+  }
+  
+  public void display() {
+    for(int y = 0; y < this.tiles.length; y++) {
+      for(int x = 0; x < this.tiles[y].length; x++) {
+        tileset.drawTile(this.tiles[y][x], x * 64, y * 64);
+        //if(y != 0 && !tileset.isWall(this.tiles[y][x]) && tileset.isWall(this.tiles[y - 1][x])) {
+          //fill(0, 32);
+          //rect(x * 64, y * 64, 64, 48);
+        //}
+      }
+    }
+    for(int l = 0; l < this.lights.length; l++) {
+      fill(255);
+      rect(this.lights[l][0] * 64 + 16, this.lights[l][1] * 64 + 24, 32, 16);
+    }
+    image(lightmap, 0, -64);
+  }
+}
+class VTileset {
+  PImage[] tiles;
+  
+  VTileset(PImage[] tiles) {
+    this.tiles = tiles;
+  }
+  
+  public boolean isWall(float id) {
+    if(id < 1.0f) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  public void drawTile(float id, float x, float y) {
+    if(!this.isWall(id)) {
+      image(this.tiles[(int) (id * 10)], x, y);
+    } else {
+      image(this.tiles[(int) (id * 10)], x, y - 64);
+    }
+  }
 }
   public void settings() {  fullScreen(FX2D); }
   static public void main(String[] passedArgs) {

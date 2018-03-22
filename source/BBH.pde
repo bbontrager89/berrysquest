@@ -1,6 +1,8 @@
 PFont font;
-PImage img, img2;
+
 VCamera cam = new VCamera();
+VTileset tileset;
+VRoom room;
 
 void setup() {
   fullScreen(FX2D);
@@ -9,8 +11,44 @@ void setup() {
   noStroke();
   fill(255);
   font = loadFont("Consolas-12.vlw");
-  img = loadImage("metalplate.png");
-  img2 = loadImage("metalgrate.png");
+  tileset = new VTileset(new PImage[] {
+    loadImage("metalwall.png"), // 0.0
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"),
+    loadImage("metalplate.png"), // 1.0
+    loadImage("metalplatenw.png"),
+    loadImage("metalplaten.png"),
+    loadImage("metalplatene.png"),
+    loadImage("metalplatew.png"),
+    loadImage("metalplatec.png"),
+    loadImage("metalplatee.png"),
+    loadImage("metalplatesw.png"),
+    loadImage("metalplates.png"),
+    loadImage("metalplatese.png"),
+    loadImage("metalgrate.png") // 2.0
+  });
+  room = new VRoom(new float[][] {
+  {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+  {0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0},
+  {0.0, 1.0, 2.0, 1.1, 1.2, 1.2, 1.3, 2.0, 1.0, 0.0},
+  {0.0, 1.0, 1.0, 1.4, 1.5, 1.5, 1.6, 1.0, 1.0, 0.0},
+  {0.0, 1.0, 1.0, 1.4, 0.0, 0.0, 1.6, 1.0, 1.0, 0.0},
+  {0.0, 1.0, 1.0, 1.4, 0.0, 0.0, 1.6, 1.0, 1.0, 0.0},
+  {0.0, 1.0, 1.0, 1.4, 1.5, 1.5, 1.6, 1.0, 1.0, 0.0},
+  {0.0, 1.0, 2.0, 1.7, 1.8, 1.8, 1.9, 2.0, 1.0, 0.0},
+  {0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0},
+  {0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0},
+  {0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0}
+}, new int[][] {{1, 1, 5}, {1, 7, 5}, {8, 1, 5}, {8, 7, 5}}, createGraphics(10 * 64, 11 * 64 + 64));
+  cam.pos.x = (room.tiles.length * 64) / 2.0;
+  cam.pos.y = (room.tiles.length * 64) / -2.0;
 }
 
 int x = 200;
@@ -30,13 +68,7 @@ void draw() {
     cam.scale *= 1.05;
   background(0);
   cam.shift();
-  for(int i = 0; i < x; i++) {
-    for(int j = 0; j < x; j++) {
-      image(img, i * 64, j * 64);
-      if(i == 5 && j == 7)
-        image(img2, i * 64, j * 64);
-    }
-  }
+  room.display();
   cam.unshift();
   fill(255);
   textFont(font);
