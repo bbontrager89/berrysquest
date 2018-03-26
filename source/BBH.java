@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream; 
 import java.io.IOException; 
 
-public class BBH extends PApplet {
+public class bbh extends PApplet {
 
 PFont font;
 
@@ -29,25 +29,25 @@ public void setup() {
   font = loadFont("Consolas-12.vlw");
   tileset = new VTileset(new PImage[] {
     loadImage("metalwall.png"), // 0.0
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
+    loadImage("metalplate.png"), // 0.1
+    loadImage("metalplate.png"), // 0.2
+    loadImage("metalplate.png"), // 0.3
+    loadImage("metalplate.png"), // 0.4
+    loadImage("metalplate.png"),//0.5
+    loadImage("metalplate.png"),//0.6
+    loadImage("metalplate.png"),//0.7
+    loadImage("metalplate.png"),//0.8
+    loadImage("metalplate.png"),//0.9
     loadImage("metalplate.png"), // 1.0
-    loadImage("metalplatenw.png"),
-    loadImage("metalplaten.png"),
-    loadImage("metalplatene.png"),
-    loadImage("metalplatew.png"),
-    loadImage("metalplatec.png"),
-    loadImage("metalplatee.png"),
-    loadImage("metalplatesw.png"),
-    loadImage("metalplates.png"),
-    loadImage("metalplatese.png"),
+    loadImage("metalplatenw.png"),//1.1
+    loadImage("metalplaten.png"),//1.2
+    loadImage("metalplatene.png"),//1.3
+    loadImage("metalplatew.png"),//1.4
+    loadImage("metalplatec.png"),//1.5
+    loadImage("metalplatee.png"),//1.6
+    loadImage("metalplatesw.png"),//1.7
+    loadImage("metalplates.png"),//1.8
+    loadImage("metalplatese.png"),//1.9
     loadImage("metalgrate.png") // 2.0
   });
   room = new VRoom(new float[][] {
@@ -109,6 +109,143 @@ public void keyPressed() {
 public void keyReleased() {
   if (keyCode > 64 && keyCode < 91)
     keys[keyCode - 65] = false;
+}
+class Bullet{
+  int x;
+  int y;
+  int size;
+  int vx;
+  int vy;
+  int baseDam;
+  double multDam = baseDam * 1.0f; //for them power ups xd
+  
+  Bullet(){
+    baseDam = 5;
+    multDam = baseDam * 1.0f; //for powerups :D
+    size = 5; //is this too small
+  }//finish, because I'm sure this ain't done ~bb
+  
+  //Bullet(int baseDam, 
+  
+  public boolean canPhase(VTileset tileset, float id){
+    if(tileset.isWall(id))
+      return false;
+    else
+      return true;
+  }
+  
+  
+  public void update(int x, int y){
+    x += vx;
+    y += vy;
+  }
+  
+  public void display(){
+    fill(0); // color of bullet
+    ellipse(x, y, size, size); // perfect circular bullet shape
+  }
+  
+  /*
+  To Do:
+  -Damage
+  -can bullet go through a solid object? (can be useful if we decide to make a phasegun bullet) check
+  -
+  */
+  
+  //Not sure if we need these if we can just do something like Bullet.x = yaddaspam, but if you don't like it then delete it. ~BB
+  public int getX(){
+    return x;
+  }
+  
+  public void setX(int x){
+    this.x = x;
+  }
+  
+  public int getY(){
+    return y;
+  }
+  
+  public void setY(int y){
+    this.y = y;
+  }
+  
+  public int getSize(){
+    return size;
+  }
+  
+  public void setSize(int size){
+    this.size = size;
+  }
+  
+  public int getVX(){
+    return vx;
+  }
+  
+  public void setVX(int vx){
+    this.vx = vx;
+  }
+  
+  public int getVY(){
+    return vy;
+  }
+  
+  public void setVY(int vy){
+    this.vy = vy;
+  }
+  
+  
+  
+  
+  
+  
+  
+}
+//Going to copy and paste an entity class from my past project and edit it as necessary here.
+
+class Entity
+{
+
+  String name;
+  int hp; // Health in hearts, hearts measured every 10 HP
+  int maxHP;
+  int spd; // Speed
+  
+  Entity(){
+    name = "Unnamed Entity";
+    hp = 30;
+    maxHP = 30; // 3 hearts, we'll go with a hearts system in this game, but to make it easy
+    //we will have it in tens so that we can have bullets that don't do float damage :)
+    spd = 1;
+  }
+  
+  /**
+   * Enter in this order... (RPG player obj)
+   * @param name
+   * @param hp
+   * @param maxHP
+   * @param spd
+   */
+  Entity(String name, int hp, int maxHP, int spd){
+    this.name = name;
+    this.hp = hp;
+    this.maxHP = maxHP;
+  }
+  
+
+  
+}
+class Player extends Entity{
+    /*
+  To do:
+  -Move functions
+  -Shoot functions
+  -Collide check
+  -Health update function (right?)
+  -player entity needs to be at the center of the camera
+  */
+  
+  
+  
 }
 class VCamera {
   // imported from Hive, apologies for any bad code
@@ -248,7 +385,7 @@ class VTileset {
 }
   public void settings() {  fullScreen(FX2D); }
   static public void main(String[] passedArgs) {
-    String[] appletArgs = new String[] { "--present", "--window-color=#666666", "--hide-stop", "BBH" };
+    String[] appletArgs = new String[] { "--present", "--window-color=#FF0A0A", "--hide-stop", "bbh" };
     if (passedArgs != null) {
       PApplet.main(concat(appletArgs, passedArgs));
     } else {

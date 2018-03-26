@@ -13,25 +13,25 @@ void setup() {
   font = loadFont("Consolas-12.vlw");
   tileset = new VTileset(new PImage[] {
     loadImage("metalwall.png"), // 0.0
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
-    loadImage("metalplate.png"),
+    loadImage("metalplate.png"), // 0.1
+    loadImage("metalplate.png"), // 0.2
+    loadImage("metalplate.png"), // 0.3
+    loadImage("metalplate.png"), // 0.4
+    loadImage("metalplate.png"),//0.5
+    loadImage("metalplate.png"),//0.6
+    loadImage("metalplate.png"),//0.7
+    loadImage("metalplate.png"),//0.8
+    loadImage("metalplate.png"),//0.9
     loadImage("metalplate.png"), // 1.0
-    loadImage("metalplatenw.png"),
-    loadImage("metalplaten.png"),
-    loadImage("metalplatene.png"),
-    loadImage("metalplatew.png"),
-    loadImage("metalplatec.png"),
-    loadImage("metalplatee.png"),
-    loadImage("metalplatesw.png"),
-    loadImage("metalplates.png"),
-    loadImage("metalplatese.png"),
+    loadImage("metalplatenw.png"),//1.1
+    loadImage("metalplaten.png"),//1.2
+    loadImage("metalplatene.png"),//1.3
+    loadImage("metalplatew.png"),//1.4
+    loadImage("metalplatec.png"),//1.5
+    loadImage("metalplatee.png"),//1.6
+    loadImage("metalplatesw.png"),//1.7
+    loadImage("metalplates.png"),//1.8
+    loadImage("metalplatese.png"),//1.9
     loadImage("metalgrate.png") // 2.0
   });
   room = new VRoom(new float[][] {
